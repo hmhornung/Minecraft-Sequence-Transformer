@@ -4,4 +4,4 @@ The first iteration will be a Transformer model with an input sequence of 5x5x5 
 These 5x5x5 input and 1x5x5 output arrays will be in a dataset made from taking pieces of the specified dimension (6x5x5) from minecraft schematics.
 The first iteration just needs a training loop implemented, Dataloader class created, and then a simple dataset extractor script will be run on the arrays already collected to create the dataset.
 
-So far about 1800 usable schematics have been collected, which will make an estimated 110GB of the previously mentioned 6x5x5 datapieces
+So far about 1800 usable schematics have been collected, which will make an estimated 110GB dataset of previously mentioned 6x5x5 datapieces
