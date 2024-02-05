@@ -39,8 +39,8 @@ class PositionalEmbedding3D(nn.Module):
         
         
         # flatten the arrays to be used for the 1-D sequences
-        self.src_positions = self.src_positions.ravel() 
-        self.tgt_positions = self.tgt_positions.ravel() 
+        self.src_positions = self.src_positions.reshape(-1) 
+        self.tgt_positions = self.tgt_positions.reshape(-1) 
 
         # ------------------------------------------------------------
         # Separate the 3 dimensions from the tuple arrays into tensors

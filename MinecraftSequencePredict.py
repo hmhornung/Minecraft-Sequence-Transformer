@@ -4,11 +4,11 @@ from PositionalEmbedding3D import PositionalEmbedding3D
 # from PositionalEmbedding3D import PositionalEmbedding3D
 
 class MinecraftSequencePredict(nn.Module):
-    def __init__(self, vocab_size, d_model, nhead, num_encoder_layers, num_decoder_layers, src_shape: tuple, tgt_shape: tuple, tgt_offset: tuple, device):
+    def __init__(self, vocab_size, d_model, nhead, num_encoder_layers, num_decoder_layers, dim_feed_forward: int, src_shape: tuple, tgt_shape: tuple, tgt_offset: tuple, device):
         super(MinecraftSequencePredict, self).__init__()
 
         # Define the embedding layer
-        self.block_embedding = nn.Embedding(vocab_size, d_model, device=device)
+        self.block_embedding = nn.Embedding(vocab_size, d_model, device=device, scale_grad_by_freq=True)
 
         self.pos_embedding = PositionalEmbedding3D(d_model, src_shape, tgt_shape, tgt_offset, device=device)
         # Define the transformer model
@@ -17,6 +17,7 @@ class MinecraftSequencePredict(nn.Module):
             nhead=nhead,
             num_encoder_layers=num_encoder_layers,
             num_decoder_layers=num_decoder_layers,
+            dim_feedforward=dim_feed_forward,
             batch_first=True,
             device=device
         )
