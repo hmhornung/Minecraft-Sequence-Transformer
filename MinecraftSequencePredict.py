@@ -4,7 +4,7 @@ from PositionalEmbedding3D import PositionalEmbedding3D
 # from PositionalEmbedding3D import PositionalEmbedding3D
 
 class MinecraftSequencePredict(nn.Module):
-    def __init__(self, vocab_size, d_model, nhead, num_encoder_layers, num_decoder_layers, dim_feed_forward: int, src_shape: tuple, tgt_shape: tuple, tgt_offset: tuple, device):
+    def __init__(self, vocab_size, d_model, nhead, num_encoder_layers, num_decoder_layers, dim_feed_forward: int, src_shape: tuple, tgt_shape: tuple, tgt_offset: tuple, device, dropout:int = 0.1):
         super(MinecraftSequencePredict, self).__init__()
 
         # Define the embedding layer
@@ -18,6 +18,7 @@ class MinecraftSequencePredict(nn.Module):
             num_encoder_layers=num_encoder_layers,
             num_decoder_layers=num_decoder_layers,
             dim_feedforward=dim_feed_forward,
+            dropout=dropout,
             batch_first=True,
             device=device
         )
@@ -25,13 +26,14 @@ class MinecraftSequencePredict(nn.Module):
         # Define the output layer
         self.fc = nn.Linear(d_model, vocab_size,device=device)
         self.softmax = nn.Softmax(dim=-1)
+        self.dropout = nn.Dropout(dropout)
         self.verbose = False
 
     def forward(self, src, tgt):
         if self.verbose: print(f'sizes:\nsrc: {src.shape}\ntgt: {tgt.shape}\n')
         
-        src = self.block_embedding(src)
-        tgt = self.block_embedding(tgt)
+        src = self.dropout(self.block_embedding(src))
+        tgt = self.dropout(self.block_embedding(tgt))
         
         if self.verbose: print(f'sizes after block embeddings:\nsrc: {src.shape}\ntgt: {tgt.shape}\n')
         
@@ -44,7 +46,7 @@ class MinecraftSequencePredict(nn.Module):
         
         if self.verbose: print(f'output shape from transformer:\n{output.shape}\n')
 
-        output = self.fc(output)
+        output = self.dropout(self.fc(output))
         
         if self.verbose: print(f'output shape after linear layer:\n{output.shape}\n')
         
